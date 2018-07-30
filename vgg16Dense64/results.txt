@@ -1,0 +1,4 @@
+This model has an accuracy of 63%.
+It's using a Dense layer of 64 nodes and a Dense layer of 5 nodes
+that outputs the predictions.
+
