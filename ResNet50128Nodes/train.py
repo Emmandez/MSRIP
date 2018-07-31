@@ -149,7 +149,7 @@ custom_model.save_weights('resnetweights128')
 testImages = np.load('testingImages.npz', mmap_mode='r+')
 testLabels = testImages['testlabels']
 
-predictions = model.predict(testImages['testImages'], verbose=1)
+predictions = custom_model.predict(testImages['testImages'], verbose=1)
 
 print('Accuracy:',get_accuracy(predictions, testLabels))
 

@@ -5,7 +5,7 @@ import itertools
 import os
 from sklearn.metrics import confusion_matrix
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
+from keras.models import Sequential, model_from_json
 from keras.layers import Dense, Flatten, Activation
 from keras.applications.vgg16 import VGG16
 
@@ -102,6 +102,18 @@ folders = os.listdir()
 HEIGHT = 224
 WIDTH = 224
 CHANNELS = 3
+'''
+Block for loading the model
+
+'''
+with open('vgg16Architechture.json','r') as file:    
+    loaded_model_json = file.read()
+
+loaded_model = model_from_json(loaded_model_json)
+loaded_model.load_weights("vgg16Weights.h5")
+
+
+
 
 vggModel = VGG16(include_top=False, input_shape=(HEIGHT,WIDTH,CHANNELS))
 model = Sequential()
@@ -121,6 +133,8 @@ model.add(Activation('softmax'))
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 model.summary()
+
+model.load_weights('vgg16Weights.h5')
 
 his = model.fit_generator(train_batches, steps_per_epoch=625, validation_data = test_batches, epochs=300, shuffle=True, verbose=2)
 loss = his.history['loss']
@@ -142,6 +156,8 @@ testImages = np.load('testingImages.npz', mmap_mode='r+')
 testLabels = testImages['testlabels']
 
 predictions = model.predict(testImages['testImages'], verbose=1)
+
+get_true_predict_labels(predictions,testLabels)
 
 print('Accuracy:',get_accuracy(predictions, testLabels))
 
